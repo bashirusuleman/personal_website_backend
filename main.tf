@@ -7,6 +7,7 @@ provider "aws" {
 // S3 Bucket
 resource "aws_s3_bucket" "S3_bucket" {
   bucket = var.s3_bucket_name
+  acl = "private"
 
 
   website {
@@ -46,10 +47,10 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
 
 
-  aliases = ["${var.s3_bucket_name}"]
+ // aliases = ["${var.s3_bucket_name}"]
 
   default_cache_behavior {
-    allowed_methods  = ["GET", "OPTIONS", ]
+    allowed_methods  = ["GET", "HEAD", "OPTIONS", ]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = local.s3_origin_id
 
@@ -79,13 +80,50 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
+ }
+
+
+ //To Allow cloudfront Origin access Identity to grant read permission to S3 website
+data "aws_iam_policy_document" "s3_policy" {
+  statement {
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.S3_bucket.arn}/*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = [aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn]
+    }
+  }
 }
+
+resource "aws_s3_bucket_policy" "website_policy" {
+  bucket = aws_s3_bucket.S3_bucket.id 
+  policy = data.aws_iam_policy_document.s3_policy.json
+}
+
+
+
+
 //lambda
 //DynamoDB
+resource "aws_dynamodb_table" "page-dynamodb-table" {
+  name           = "Web-page-view"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "ID"
+  
+  attribute {
+    name = "ID"
+    type = "S"
+  }
+ }
+
 //API Gateway
 //CodePipeline
 //ACM
 //Route 53
+//SES
 
 
 //Outputs
@@ -96,4 +134,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 */
 output "S3website_url" {
   value = aws_s3_bucket.S3_bucket.website_domain
+}
+output "dynamodb-arn" {
+  value = aws_dynamodb_table.page-dynamodb-table.arn
 }
