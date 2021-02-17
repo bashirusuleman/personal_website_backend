@@ -1,6 +1,9 @@
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "Cloudfront OAI for S3 website Bucket"
 }
+locals {
+  s3_origin_id = "myS3Origin"
+}
 
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
@@ -52,4 +55,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
+
+  
 }

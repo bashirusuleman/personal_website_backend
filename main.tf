@@ -1,10 +1,6 @@
 
 
 
-// S3 object
-//Cloudfront
-
-
 //To Allow cloudfront Origin access Identity to grant read permission to S3 website
 data "aws_iam_policy_document" "s3_policy" {
   statement {
@@ -26,23 +22,8 @@ resource "aws_s3_bucket_policy" "website_policy" {
 
 
 
-//lambda
-//DynamoDB
-resource "aws_dynamodb_table" "page-dynamodb-table" {
-  name           = "Web-page-view"
-  billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
-  hash_key       = "ID"
-
-  attribute {
-    name = "ID"
-    type = "S"
-  }
-}
 
 //API Gateway
-//CodePipeline
 //ACM
 //Route 53
 //SES
@@ -59,5 +40,5 @@ output "S3website_url" {
   value = aws_s3_bucket.S3_bucket.website_domain
 }
 output "dynamodb-arn" {
-  value = aws_dynamodb_table.page-dynamodb-table.arn
+  value = aws_dynamodb_table.pageviews-dynamodb-table.arn
 }
