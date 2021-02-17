@@ -8,6 +8,6 @@ resource "aws_dynamodb_table" "pageviews-dynamodb-table" {
   attribute {
     name = "ID"
     type = "S"
-  } 
-
   }
+
+}

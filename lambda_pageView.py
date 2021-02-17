@@ -1,14 +1,14 @@
 import json
 import boto3
 import os
-# from decimal import Decimal
 
-def lambda_handler(event, context):
-    # Initialize dynamodb boto3 object
-    dynamodb = boto3.resource('dynamodb')
+
+# Initialize dynamodb boto3 object
+dynamodb = boto3.resource('dynamodb')
+
+def lambda_handler(event, context): 
    
     table = dynamodb.Table('web-page-views')
-
     # Atomic update item in table or add if doesn't exist
     updateItem = table.update_item(
         Key={
@@ -21,7 +21,7 @@ def lambda_handler(event, context):
         ReturnValues="UPDATED_NEW"
     )
 
-    # Format dynamodb response into variable
+    # Format dynamodb response 
     responseBody = json.dumps(int(updateItem['Attributes']['pageviews']))
     
 

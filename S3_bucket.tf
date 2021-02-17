@@ -16,10 +16,10 @@ resource "aws_s3_bucket" "S3_bucket" {
 
 // S3 Bucket for lambda
 resource "aws_s3_bucket" "S3_bucket_lambda" {
-  bucket = var.s3_bucket_name[1] 
+  bucket = var.s3_bucket_name[1]
   acl    = "private"
 
- versioning {
+  versioning {
     enabled = true
   }
 }

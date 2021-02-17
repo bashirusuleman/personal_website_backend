@@ -42,3 +42,7 @@ output "S3website_url" {
 output "dynamodb-arn" {
   value = aws_dynamodb_table.pageviews-dynamodb-table.arn
 }
+
+output "pageview_endpoint" {
+  value = aws_api_gateway_deployment.pageview_deployment.invoke_url  
+}
