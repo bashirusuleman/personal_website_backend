@@ -20,10 +20,6 @@ resource "aws_s3_bucket_policy" "website_policy" {
 }
 
 
-
-
-
-//API Gateway
 //ACM
 //Route 53
 //SES
@@ -32,10 +28,6 @@ resource "aws_s3_bucket_policy" "website_policy" {
 
 //Outputs
 
-/* output "api_gateway_url" {
-  value =
-}
-*/
 output "S3website_url" {
   value = aws_s3_bucket.S3_bucket.website_domain
 }
