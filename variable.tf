@@ -11,3 +11,8 @@ variable "pageview_Lambda" {
   type        = string
   description = "Lambda Function name for Page view"
 }
+
+
+variable "domain_name"{
+  type = string
+}

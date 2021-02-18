@@ -1,15 +1,11 @@
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "Cloudfront OAI for S3 website Bucket"
 }
-locals {
-  s3_origin_id = "myS3Origin"
-}
-
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = aws_s3_bucket.S3_bucket.bucket_regional_domain_name
-    origin_id   = local.s3_origin_id
+    origin_id   = var.domain_name
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
@@ -21,13 +17,13 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_root_object = "index.html"
 
 
-
-  // aliases = ["${var.s3_bucket_name}"]
+  #This ensures the domain name is reachable via cloudfront
+  aliases = [var.domain_name, "www.${var.domain_name}"]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS", ]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.s3_origin_id
+    target_origin_id = var.domain_name
 
     forwarded_values {
       query_string = false
@@ -53,8 +49,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   price_class = "PriceClass_200"
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = module.certificate.arn
+    ssl_support_method  = "sni-only"
   }
-
 
 }

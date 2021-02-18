@@ -55,7 +55,9 @@ resource "aws_iam_policy" "lambda_policy" {
         "Effect" : "Allow",
         "Action" : "dynamodb:UpdateItem",
         "Resource" : "${aws_dynamodb_table.pageviews-dynamodb-table.arn}"
-      },
+
+
+           },
       {
         "Sid" : "VisualEditor1",
         "Effect" : "Allow",
